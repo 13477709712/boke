@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}登录 - 我的博客{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h1>登录</h1>
+        <form method="post">
+            <div class="form-group">
+                <label for="username">用户名</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">密码</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">登录</button>
+        </form>
+        <p class="form-footer">没有账号？<a href="{{ url_for('register') }}">注册</a></p>
+    </div>
+{% endblock %}

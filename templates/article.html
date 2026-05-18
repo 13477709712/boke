@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.title }} - 我的博客{% endblock %}
+
+{% block content %}
+    <article class="article-detail">
+        <h1>{{ article.title }}</h1>
+        <div class="article-meta">
+            <span>{{ article.author.username }}</span>
+            <span>{{ article.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+            {% if article.updated_at != article.created_at %}
+                <span>更新于 {{ article.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
+            {% endif %}
+        </div>
+
+        <div class="article-content">
+            {{ article.html_content }}
+        </div>
+
+        {% if current_user.is_authenticated and current_user.id == article.user_id %}
+            <div class="article-actions">
+                <a href="{{ url_for('edit_article', article_id=article.id) }}" class="btn btn-edit">编辑</a>
+                <form action="{{ url_for('delete_article', article_id=article.id) }}" method="post" onsubmit="return confirm('确定删除？')" style="display:inline">
+                    <button type="submit" class="btn btn-delete">删除</button>
+                </form>
+            </div>
+        {% endif %}
+
+        <a href="{{ url_for('index') }}" class="back-link">← 返回首页</a>
+    </article>
+{% endblock %}
