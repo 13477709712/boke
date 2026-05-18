@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="bg-overlay"></div>
+
     <nav class="navbar">
         <div class="container">
             <a href="{{ url_for('index') }}" class="logo">我的博客</a>
@@ -41,5 +43,112 @@
             <p>© 2024 我的博客 &middot; Powered by Flask</p>
         </div>
     </footer>
+
+    <!-- Music Player -->
+    <div class="music-player" id="musicPlayer">
+        <button class="music-toggle" id="musicToggle" onclick="togglePlayer()">
+            <span id="toggleIcon">🎵</span>
+        </button>
+
+        <div class="music-panel" id="musicPanel">
+            <div class="music-header">
+                <span class="music-title" id="musicTitle">未播放</span>
+                <button class="music-close" onclick="togglePlayer()">✕</button>
+            </div>
+            <div class="music-controls">
+                <button onclick="prevTrack()" title="上一首">⏮</button>
+                <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+                <button onclick="nextTrack()" title="下一首">⏭</button>
+            </div>
+            <div class="music-tracks" id="musicTracks"></div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer" preload="metadata"></audio>
+
+    <script>
+        const tracks = [
+            { name: "助眠 治愈 安静", file: "助眠 治愈 安静_完整版_(ID_2023239)_猴子音悦_houzi8.com.mp3" },
+            { name: "温暖的小确幸", file: "温暖的小确幸 by Joker-完整版.mp3" },
+            { name: "钢琴 温暖 助眠", file: "钢琴 温暖 助眠_完整版_(ID_2144448)_猴子音悦_houzi8.com.mp3" }
+        ];
+
+        let currentTrack = 0;
+        let isPlaying = false;
+        let isOpen = false;
+
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const musicTitle = document.getElementById('musicTitle');
+        const musicPanel = document.getElementById('musicPanel');
+        const musicTracks = document.getElementById('musicTracks');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        tracks.forEach((t, i) => {
+            const div = document.createElement('div');
+            div.className = 'track-item' + (i === 0 ? ' active' : '');
+            div.textContent = t.name;
+            div.onclick = () => selectTrack(i);
+            div.id = 'track-' + i;
+            musicTracks.appendChild(div);
+        });
+
+        function loadTrack(index) {
+            currentTrack = index;
+            const base = "{{ url_for('static', filename='') }}";
+            audio.src = base + tracks[index].file;
+            musicTitle.textContent = tracks[index].name;
+            document.querySelectorAll('.track-item').forEach((el, i) => {
+                el.className = 'track-item' + (i === index ? ' active' : '');
+            });
+            if (isPlaying) {
+                audio.play();
+            }
+        }
+
+        function togglePlayer() {
+            isOpen = !isOpen;
+            musicPanel.classList.toggle('open', isOpen);
+            toggleIcon.textContent = isOpen ? '🎶' : '🎵';
+        }
+
+        function togglePlay() {
+            if (!audio.src) {
+                loadTrack(0);
+            }
+            if (isPlaying) {
+                audio.pause();
+                playBtn.textContent = '▶';
+            } else {
+                audio.play();
+                playBtn.textContent = '⏸';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function nextTrack() {
+            const next = (currentTrack + 1) % tracks.length;
+            loadTrack(next);
+            if (isPlaying) audio.play();
+        }
+
+        function prevTrack() {
+            const prev = (currentTrack - 1 + tracks.length) % tracks.length;
+            loadTrack(prev);
+            if (isPlaying) audio.play();
+        }
+
+        function selectTrack(index) {
+            loadTrack(index);
+            if (isPlaying) audio.play();
+            else { audio.play(); isPlaying = true; playBtn.textContent = '⏸'; }
+        }
+
+        audio.addEventListener('ended', nextTrack);
+
+        if (!musicPanel.classList.contains('open')) {
+            musicPanel.classList.remove('open');
+        }
+    </script>
 </body>
 </html>
