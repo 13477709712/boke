@@ -2,9 +2,9 @@
     --primary: #4f46e5;
     --primary-hover: #4338ca;
     --primary-light: rgba(79, 70, 229, 0.15);
-    --text: #1e293b;
-    --text-secondary: #334155;
-    --text-muted: #64748b;
+    --text: #000000;
+    --text-secondary: #000000;
+    --text-muted: #000000;
     --border: rgba(255, 255, 255, 0.12);
     --card-border: rgba(255, 255, 255, 0.08);
     --success: #22c55e;
