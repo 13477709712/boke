@@ -1,22 +1,17 @@
 :root {
     --primary: #4f46e5;
     --primary-hover: #4338ca;
-    --primary-light: rgba(79, 70, 229, 0.12);
-    --bg: #f8fafc;
-    --card-bg: rgba(255, 255, 255, 0.68);
-    --card-border: rgba(255, 255, 255, 0.30);
+    --primary-light: rgba(79, 70, 229, 0.15);
     --text: #1e293b;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --border: rgba(226, 232, 240, 0.50);
+    --text-secondary: #334155;
+    --text-muted: #64748b;
+    --border: rgba(255, 255, 255, 0.12);
+    --card-border: rgba(255, 255, 255, 0.08);
     --success: #22c55e;
-    --success-bg: rgba(34, 197, 94, 0.12);
+    --success-bg: rgba(34, 197, 94, 0.10);
     --danger: #ef4444;
-    --danger-bg: rgba(239, 68, 68, 0.12);
+    --danger-bg: rgba(239, 68, 68, 0.10);
     --radius: 14px;
-    --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-    --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.10);
-    --blur: 18px;
 }
 
 * {
@@ -27,7 +22,6 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", "Microsoft YaHei", sans-serif;
-    background: var(--bg);
     background-image: url('/static/bg.jpg');
     background-size: cover;
     background-attachment: fixed;
@@ -36,18 +30,13 @@ body {
     color: var(--text);
     line-height: 1.7;
     min-height: 100vh;
+    text-shadow: 0 1px 8px rgba(255, 255, 255, 0.50);
+    display: flex;
+    flex-direction: column;
 }
 
 .bg-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.30);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: -1;
+    display: none;
 }
 
 .container {
@@ -58,10 +47,7 @@ body {
 
 /* Navbar */
 .navbar {
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--card-border);
+    background: transparent;
     padding: 0;
     position: sticky;
     top: 0;
@@ -73,6 +59,7 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 64px;
+    border-bottom: 1px solid var(--card-border);
 }
 
 .logo {
@@ -97,7 +84,7 @@ body {
     color: var(--text-secondary);
     text-decoration: none;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     padding: 8px 14px;
     border-radius: 10px;
     transition: all 0.2s;
@@ -105,7 +92,7 @@ body {
 
 .nav-links a:hover {
     color: var(--primary);
-    background: var(--primary-light);
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .username {
@@ -117,8 +104,9 @@ body {
 
 /* Main Content */
 main.container {
+    flex: 1;
     padding-top: 32px;
-    padding-bottom: 80px;
+    padding-bottom: 40px;
 }
 
 /* Alerts */
@@ -129,8 +117,6 @@ main.container {
     font-size: 14px;
     font-weight: 500;
     animation: slideDown 0.3s ease;
-    backdrop-filter: blur(var(--blur));
-    -webkit-backdrop-filter: blur(var(--blur));
 }
 
 @keyframes slideDown {
@@ -141,13 +127,13 @@ main.container {
 .alert-success {
     background: var(--success-bg);
     color: #166534;
-    border: 1px solid rgba(187, 247, 208, 0.50);
+    border: 1px solid rgba(187, 247, 208, 0.30);
 }
 
 .alert-error {
     background: var(--danger-bg);
     color: #991b1b;
-    border: 1px solid rgba(254, 202, 202, 0.50);
+    border: 1px solid rgba(254, 202, 202, 0.30);
 }
 
 /* Page Title */
@@ -157,18 +143,14 @@ main.container {
     margin-bottom: 28px;
     color: var(--text);
     letter-spacing: -0.5px;
-    text-shadow: 0 1px 4px rgba(255,255,255,0.60);
 }
 
 /* Article Card */
 .article-card {
-    background: var(--card-bg);
-    backdrop-filter: blur(var(--blur));
-    -webkit-backdrop-filter: blur(var(--blur));
+    background: transparent;
     padding: 28px;
     border-radius: var(--radius);
     margin-bottom: 20px;
-    box-shadow: var(--shadow);
     border: 1px solid var(--card-border);
     transition: all 0.30s ease;
     position: relative;
@@ -188,9 +170,7 @@ main.container {
 }
 
 .article-card:hover {
-    box-shadow: var(--shadow-hover);
-    transform: translateY(-3px);
-    background: rgba(255, 255, 255, 0.78);
+    background: rgba(255, 255, 255, 0.06);
     border-color: var(--primary);
 }
 
@@ -258,9 +238,7 @@ main.container {
     color: var(--text-muted);
     font-size: 16px;
     padding: 80px 20px;
-    background: var(--card-bg);
-    backdrop-filter: blur(var(--blur));
-    -webkit-backdrop-filter: blur(var(--blur));
+    background: transparent;
     border-radius: var(--radius);
     border: 2px dashed var(--card-border);
 }
@@ -272,12 +250,9 @@ main.container {
 
 /* Forms */
 .form-container {
-    background: var(--card-bg);
-    backdrop-filter: blur(var(--blur));
-    -webkit-backdrop-filter: blur(var(--blur));
+    background: transparent;
     padding: 36px;
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
     border: 1px solid var(--card-border);
     max-width: 600px;
     margin: 0 auto;
@@ -312,7 +287,7 @@ main.container {
     font-size: 15px;
     font-family: inherit;
     transition: all 0.2s;
-    background: rgba(255, 255, 255, 0.60);
+    background: rgba(255, 255, 255, 0.10);
     color: var(--text);
 }
 
@@ -320,8 +295,7 @@ main.container {
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.10);
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.18);
 }
 
 .form-group textarea {
@@ -373,7 +347,7 @@ main.container {
 .btn-edit {
     background: rgba(34, 197, 94, 0.15);
     color: #166534;
-    border: 1px solid rgba(187, 247, 208, 0.50);
+    border: 1px solid rgba(187, 247, 208, 0.30);
 }
 
 .btn-edit:hover {
@@ -384,7 +358,7 @@ main.container {
 .btn-delete {
     background: rgba(239, 68, 68, 0.12);
     color: #991b1b;
-    border: 1px solid rgba(254, 202, 202, 0.50);
+    border: 1px solid rgba(254, 202, 202, 0.30);
 }
 
 .btn-delete:hover {
@@ -394,12 +368,9 @@ main.container {
 
 /* Article Detail */
 .article-detail {
-    background: var(--card-bg);
-    backdrop-filter: blur(var(--blur));
-    -webkit-backdrop-filter: blur(var(--blur));
+    background: transparent;
     padding: 40px;
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
     border: 1px solid var(--card-border);
 }
 
@@ -434,7 +405,7 @@ main.container {
 .article-content a { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
 .article-content a:hover { color: var(--primary-hover); }
 .article-content code {
-    background: rgba(241, 245, 249, 0.80);
+    background: rgba(241, 245, 249, 0.60);
     padding: 3px 8px;
     border-radius: 8px;
     font-size: 14px;
@@ -443,7 +414,7 @@ main.container {
     border: 1px solid var(--border);
 }
 .article-content pre {
-    background: rgba(15, 23, 42, 0.88);
+    background: rgba(15, 23, 42, 0.80);
     color: #e2e8f0;
     padding: 20px 24px;
     border-radius: var(--radius);
@@ -463,7 +434,7 @@ main.container {
     border-left: 4px solid var(--primary);
     padding: 16px 20px;
     margin: 20px 0;
-    background: var(--primary-light);
+    background: rgba(238, 242, 255, 0.15);
     border-radius: 0 var(--radius) var(--radius) 0;
     color: var(--text-secondary);
 }
@@ -471,7 +442,6 @@ main.container {
     max-width: 100%;
     border-radius: var(--radius);
     margin: 24px 0;
-    box-shadow: var(--shadow);
 }
 .article-content table {
     width: 100%;
@@ -485,7 +455,7 @@ main.container {
     text-align: left;
 }
 .article-content th {
-    background: rgba(248, 250, 252, 0.60);
+    background: rgba(248, 250, 252, 0.30);
     font-weight: 600;
 }
 .article-content hr {
@@ -524,11 +494,8 @@ main.container {
     padding: 32px 0;
     color: var(--text-muted);
     font-size: 13px;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--card-border);
     margin-top: 40px;
-    background: rgba(255, 255, 255, 0.30);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
 }
 
 /* Music Player */
@@ -567,12 +534,12 @@ main.container {
     bottom: 64px;
     right: 0;
     width: 280px;
-    background: rgba(255, 255, 255, 0.82);
+    background: rgba(255, 255, 255, 0.80);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
     border-radius: 18px;
-    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
-    border: 1px solid var(--card-border);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.20);
     padding: 20px;
     transform: scale(0.90);
     transform-origin: bottom right;
@@ -616,7 +583,7 @@ main.container {
 }
 
 .music-close:hover {
-    background: var(--border);
+    background: rgba(0, 0, 0, 0.06);
     color: var(--text);
 }
 
