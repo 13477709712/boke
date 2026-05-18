@@ -44,12 +44,10 @@
         </div>
     </footer>
 
-    <!-- Music Player -->
     <div class="music-player" id="musicPlayer">
         <button class="music-toggle" id="musicToggle" onclick="togglePlayer()">
             <span id="toggleIcon">🎵</span>
         </button>
-
         <div class="music-panel" id="musicPanel">
             <div class="music-header">
                 <span class="music-title" id="musicTitle">未播放</span>
@@ -101,9 +99,7 @@
             document.querySelectorAll('.track-item').forEach((el, i) => {
                 el.className = 'track-item' + (i === index ? ' active' : '');
             });
-            if (isPlaying) {
-                audio.play();
-            }
+            if (isPlaying) audio.play();
         }
 
         function togglePlayer() {
@@ -113,9 +109,7 @@
         }
 
         function togglePlay() {
-            if (!audio.src) {
-                loadTrack(0);
-            }
+            if (!audio.src) loadTrack(0);
             if (isPlaying) {
                 audio.pause();
                 playBtn.textContent = '▶';
@@ -146,9 +140,45 @@
 
         audio.addEventListener('ended', nextTrack);
 
-        if (!musicPanel.classList.contains('open')) {
-            musicPanel.classList.remove('open');
+        // Extract colors from background image
+        function extractColors() {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = function () {
+                const canvas = document.createElement('canvas');
+                canvas.width = 200;
+                canvas.height = 200;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, 200, 200);
+                const data = ctx.getImageData(0, 0, 200, 200).data;
+
+                const buckets = {};
+                for (let i = 0; i < data.length; i += 4) {
+                    const r = Math.floor(data[i] / 40) * 40;
+                    const g = Math.floor(data[i + 1] / 40) * 40;
+                    const b = Math.floor(data[i + 2] / 40) * 40;
+                    const key = r + ',' + g + ',' + b;
+                    buckets[key] = (buckets[key] || 0) + data[i + 3];
+                }
+
+                const sorted = Object.entries(buckets).sort((a, b) => b[1] - a[1]);
+
+                for (const [key] of sorted) {
+                    const [r, g, b] = key.split(',').map(Number);
+                    const bright = (r * 299 + g * 587 + b * 114) / 1000;
+                    if (bright > 60 && bright < 220) {
+                        const root = document.documentElement;
+                        root.style.setProperty('--primary', `rgb(${r},${g},${b})`);
+                        root.style.setProperty('--primary-hover', `rgb(${Math.max(0,r-20)},${Math.max(0,g-20)},${Math.max(0,b-20)})`);
+                        root.style.setProperty('--primary-light', `rgba(${r},${g},${b},0.12)`);
+                        break;
+                    }
+                }
+            };
+            img.src = '/static/bg.jpg';
         }
+
+        extractColors();
     </script>
 </body>
 </html>
