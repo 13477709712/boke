@@ -155,6 +155,7 @@ main.container {
     transition: all 0.30s ease;
     position: relative;
     overflow: hidden;
+    text-align: left;
 }
 
 .article-card::before {
