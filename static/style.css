@@ -1366,13 +1366,9 @@ select:focus {
     opacity: 0.7;
 }
 
-/* Giscus Comments */
-.giscus-wrapper {
+/* Comments */
+.comments-wrapper {
     margin-top: 32px;
-}
-
-.giscus-frame {
-    width: 100%;
 }
 
 /* Share Section */
