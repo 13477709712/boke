@@ -12,7 +12,7 @@
 
     <nav class="navbar">
         <div class="container">
-            <a href="{{ url_for('index') }}" class="logo">我的博客</a>
+            <a href="{{ url_for('index') }}" class="logo">{% block logo %}我的博客{% endblock %}</a>
             <div class="nav-links">
                 <a href="{{ url_for('index') }}">首页</a>
                 {% if current_user.is_authenticated %}

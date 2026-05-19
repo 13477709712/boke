@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block logo %}{% endblock %}
+
 {% block title %}写文章 - 我的博客{% endblock %}
 
 {% block head %}
@@ -18,6 +20,7 @@
         <textarea name="content" style="display:none"></textarea>
         <button type="submit" class="btn btn-primary submit-btn">发布文章</button>
     </form>
+    <a href="{{ url_for('index') }}" class="write-footer-logo">我的博客</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vditor@3.10.3/dist/index.min.js"></script>

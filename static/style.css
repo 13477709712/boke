@@ -989,3 +989,16 @@ main.container {
         padding: 16px;
     }
 }
+
+/* Write Page Footer Logo */
+.write-footer-logo {
+    display: block;
+    margin-top: 24px;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-decoration: none;
+    font-weight: 600;
+}
+.write-footer-logo:hover {
+    color: var(--primary);
+}
