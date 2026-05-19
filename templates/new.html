@@ -29,7 +29,7 @@
         height: 640,
         path: "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
         codeFold: true,
-        saveHTMLToTextarea: true,
+        saveHTMLToTextarea: false,
         searchReplace: true,
         emoji: true,
         tocm: true,
@@ -43,6 +43,10 @@
             return ["undo", "redo", "|", "bold", "italic", "strikethrough", "|", "h1", "h2", "h3", "|", "list-ul", "list-ol", "|", "link", "image", "code", "code-block", "table", "|", "emoji", "toc", "|", "preview", "fullscreen"]
         },
         placeholder: "开始写文章吧...（支持 Markdown 语法）"
+    });
+
+    document.querySelector('form').addEventListener('submit', function() {
+        document.querySelector('textarea[name="content"]').value = editor.getMarkdown();
     });
 })();
 </script>
