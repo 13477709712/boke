@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block logo %}{% endblock %}
+
 {% block title %}{{ article.title }} - 我的博客{% endblock %}
 
 {% block content %}
@@ -43,6 +45,8 @@
         </div>
     </aside>
 </div>
+
+<a href="{{ url_for('index') }}" class="write-footer-logo">我的博客</a>
 
 <script>
 (function() {
