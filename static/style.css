@@ -1366,6 +1366,20 @@ select:focus {
     opacity: 0.7;
 }
 
+/* Giscus Comments */
+.giscus-wrapper {
+    margin-top: 32px;
+}
+
+.giscus {
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
 /* Share Section */
 .share-section {
     margin-top: 32px;
