@@ -1366,10 +1366,30 @@ select:focus {
     opacity: 0.7;
 }
 
-/* Comments */
-.comments-wrapper {
+/* Comments Link */
+.comments-link {
     margin-top: 40px;
-    margin-bottom: 8px;
+    text-align: center;
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 28px;
+    border: 2px solid var(--primary);
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--primary);
+    background: transparent;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-1px);
 }
 
 /* Share Section */
