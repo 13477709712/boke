@@ -5,7 +5,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from werkzeug.security import generate_password_hash, check_password_hash
 import markdown
 import markupsafe
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import uuid
 
@@ -36,6 +36,12 @@ with app.app_context():
             'ALTER TABLE article ADD COLUMN views INTEGER DEFAULT 0')
         )
     db.session.commit()
+
+    from models import Category
+    if Category.query.count() == 0:
+        for name in ['技术', '生活', '随笔', '教程']:
+            db.session.add(Category(name=name))
+        db.session.commit()
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -214,7 +220,7 @@ def edit_article(article_id):
         article.title = title
         article.content = content
         article.category_id = category_id
-        article.updated_at = datetime.utcnow()
+        article.updated_at = datetime.utcnow() + timedelta(hours=8)
         db.session.commit()
         flash('文章已更新', 'success')
         return redirect(url_for('article_detail', article_id=article.id))
