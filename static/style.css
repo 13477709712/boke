@@ -1368,7 +1368,8 @@ select:focus {
 
 /* Comments */
 .comments-wrapper {
-    margin-top: 32px;
+    margin-top: 40px;
+    margin-bottom: 8px;
 }
 
 /* Share Section */

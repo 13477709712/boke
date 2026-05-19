@@ -71,11 +71,17 @@
     </aside>
 </div>
 
-<div class="comments-wrapper">
-    <div class="utterances"></div>
-</div>
-
 <a href="{{ url_for('index') }}" class="write-footer-logo">我的博客</a>
+
+<div class="comments-wrapper">
+<script src="https://utteranc.es/client.js"
+        repo="13477709712/boke"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+</div>
 
 <script>
 (function() {
@@ -133,13 +139,5 @@
         });
     }
 })();
-</script>
-
-<script src="https://utteranc.es/client.js"
-        repo="13477709712/boke"
-        issue-term="pathname"
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
 </script>
 {% endblock %}
