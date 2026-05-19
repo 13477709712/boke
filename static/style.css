@@ -240,7 +240,8 @@ main.container {
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    color: var(--primary);
+    color: #1a1a2e;
+    text-shadow: 0 1px 4px rgba(255,255,255,0.6);
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
