@@ -3,8 +3,7 @@
 {% block title %}写文章 - 我的博客{% endblock %}
 
 {% block head %}
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/css/editormd.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vditor@3.10.3/dist/index.css" />
 {% endblock %}
 
 {% block content %}
@@ -15,39 +14,34 @@
             <label for="title">文章标题</label>
             <input type="text" id="title" name="title" required placeholder="请输入文章标题">
         </div>
-        <div id="editormd">
-            <textarea name="content" style="display:none;" placeholder="开始写文章吧..."></textarea>
-        </div>
+        <div id="vditor"></div>
+        <textarea name="content" style="display:none"></textarea>
         <button type="submit" class="btn btn-primary submit-btn">发布文章</button>
     </form>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/editormd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vditor@3.10.3/dist/index.min.js"></script>
 <script>
 (function() {
-    var editor = editormd("editormd", {
-        width: "100%",
+    var vditor = new Vditor('vditor', {
         height: 640,
-        path: "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
-        codeFold: true,
-        saveHTMLToTextarea: false,
-        searchReplace: true,
-        emoji: true,
-        tocm: true,
-        tex: true,
-        flowChart: true,
-        sequenceDiagram: true,
-        imageUpload: true,
-        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-        imageUploadURL: "{{ url_for('upload_image') }}",
-        toolbarIcons: function() {
-            return ["undo", "redo", "|", "bold", "italic", "strikethrough", "|", "h1", "h2", "h3", "|", "list-ul", "list-ol", "|", "link", "image", "code", "code-block", "table", "|", "emoji", "toc", "|", "preview", "fullscreen"]
+        mode: 'ir',
+        placeholder: '开始写文章吧...',
+        upload: {
+            url: '{{ url_for("upload_image") }}',
+            fieldName: 'editormd-image-file',
         },
-        placeholder: "开始写文章吧...（支持 Markdown 语法）"
+        toolbar: [
+            'emoji', 'headings', 'bold', 'italic', 'strike', '|',
+            'list', 'ordered-list', 'check', '|',
+            'code', 'code-block', 'table', 'link', 'image', '|',
+            'preview', 'fullscreen', 'outline'
+        ],
+        cache: false
     });
 
     document.querySelector('form').addEventListener('submit', function() {
-        document.querySelector('textarea[name="content"]').value = editor.getMarkdown();
+        document.querySelector('textarea[name="content"]').value = vditor.getValue();
     });
 })();
 </script>

@@ -713,62 +713,22 @@ main.container {
     font-size: 16px;
 }
 
-/* Editor.md Theme Overrides */
-.editormd {
+/* Vditor Theme Overrides */
+.vditor {
     border: 1.5px solid var(--border) !important;
     border-radius: 12px !important;
     overflow: hidden;
     margin-bottom: 4px;
 }
 
-.editormd .editormd-toolbar {
+.vditor-toolbar {
     border-radius: 12px 12px 0 0 !important;
-    background: rgba(255, 255, 255, 0.06) !important;
     border-bottom: 1px solid var(--border) !important;
 }
 
-.editormd .editormd-toolbar .editormd-menu li a {
-    color: var(--text-secondary) !important;
-    border-radius: 6px !important;
-    transition: all 0.2s !important;
-}
-
-.editormd .editormd-toolbar .editormd-menu li a:hover {
-    color: var(--primary) !important;
-    background: var(--primary-light) !important;
-}
-
-.editormd .editormd-menu li.active a {
-    color: var(--primary) !important;
-    background: var(--primary-light) !important;
-}
-
-.editormd .editormd-textarea {
-    background: rgba(255, 255, 255, 0.04) !important;
-}
-
-.editormd .CodeMirror {
-    background: rgba(255, 255, 255, 0.04) !important;
-    color: var(--text) !important;
-}
-
-.editormd .editormd-preview {
-    background: rgba(255, 255, 255, 0.04) !important;
-}
-
-.editormd .editormd-preview-container, 
-.editormd .editormd-html-preview {
-    color: var(--text) !important;
-}
-
-.editormd .editormd-preview-container h1,
-.editormd .editormd-preview-container h2,
-.editormd .editormd-preview-container h3 {
-    color: var(--text) !important;
-}
-
-.editormd .editormd-preview-container p {
-    color: var(--text-secondary) !important;
+.vditor-ir .vditor-reset {
+    font-size: 15px !important;
+    line-height: 1.8 !important;
 }
 
 /* Footer */
