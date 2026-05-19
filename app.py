@@ -21,6 +21,21 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+    from sqlalchemy import inspect
+    insp = inspect(db.engine)
+    if 'category' not in insp.get_table_names():
+        db.create_all()
+    cols = [c['name'] for c in insp.get_columns('article')]
+    if 'category_id' not in cols:
+        db.session.execute(
+            'ALTER TABLE article ADD COLUMN category_id INTEGER '
+            'REFERENCES category(id)'
+        )
+    if 'views' not in cols:
+        db.session.execute(
+            'ALTER TABLE article ADD COLUMN views INTEGER DEFAULT 0'
+        )
+    db.session.commit()
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
