@@ -84,7 +84,11 @@ body {
     color: var(--text-secondary);
     display: inline-flex;
     align-items: center;
+    gap: 4px;
     margin-left: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
     vertical-align: middle;
     transition: color 0.2s;
 }
