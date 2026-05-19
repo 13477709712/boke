@@ -2,19 +2,48 @@
 
 {% block title %}编辑文章 - 我的博客{% endblock %}
 
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/css/editormd.min.css" />
+{% endblock %}
+
 {% block content %}
-    <div class="form-container">
-        <h1>编辑文章</h1>
-        <form method="post">
-            <div class="form-group">
-                <label for="title">标题</label>
-                <input type="text" id="title" name="title" value="{{ article.title }}" required>
-            </div>
-            <div class="form-group">
-                <label for="content">内容（支持 Markdown 格式）</label>
-                <textarea id="content" name="content" rows="20" required>{{ article.content }}</textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">保存</button>
-        </form>
-    </div>
+<div class="form-container editor-container">
+    <h1>编辑文章</h1>
+    <form method="post">
+        <div class="form-group">
+            <label for="title">文章标题</label>
+            <input type="text" id="title" name="title" required value="{{ article.title }}">
+        </div>
+        <div id="editormd">
+            <textarea name="content" style="display:none;">{{ article.content }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary submit-btn">保存修改</button>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/editor.md@1.5.0/editormd.min.js"></script>
+<script>
+(function() {
+    var editor = editormd("editormd", {
+        width: "100%",
+        height: 640,
+        path: "https://cdn.jsdelivr.net/npm/editor.md@1.5.0/lib/",
+        codeFold: true,
+        saveHTMLToTextarea: true,
+        searchReplace: true,
+        emoji: true,
+        tocm: true,
+        tex: true,
+        flowChart: true,
+        sequenceDiagram: true,
+        imageUpload: true,
+        imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+        imageUploadURL: "{{ url_for('upload_image') }}",
+        toolbarIcons: function() {
+            return ["undo", "redo", "|", "bold", "italic", "strikethrough", "|", "h1", "h2", "h3", "|", "list-ul", "list-ol", "|", "link", "image", "code", "code-block", "table", "|", "emoji", "toc", "|", "preview", "fullscreen"]
+        },
+        placeholder: "继续编辑文章..."
+    });
+})();
+</script>
 {% endblock %}

@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import markdown
 import markupsafe
 from datetime import datetime
 import os
+import uuid
 
 from models import db, User, Article
 
@@ -12,6 +13,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 
 db.init_app(app)
 
@@ -106,9 +108,31 @@ def new_article():
 @app.route('/article/<int:article_id>')
 def article_detail(article_id):
     article = Article.query.get_or_404(article_id)
-    md = markdown.Markdown(extensions=['fenced_code', 'tables', 'codehilite'])
+    md = markdown.Markdown(extensions=['fenced_code', 'tables', 'codehilite', 'toc'])
     article.html_content = markupsafe.Markup(md.convert(article.content))
     return render_template('article.html', article=article)
+
+
+@app.route('/upload_image', methods=['POST'])
+@login_required
+def upload_image():
+    file = request.files.get('editormd-image-file')
+    if not file:
+        return jsonify({'success': 0, 'message': '没有上传文件'})
+
+    filename = file.filename or ''
+    ext = filename.rsplit('.', 1)[-1].lower() if '.' in filename else ''
+    if ext not in ['jpg', 'jpeg', 'gif', 'png', 'bmp', 'webp']:
+        return jsonify({'success': 0, 'message': '不支持的图片格式'})
+
+    upload_dir = os.path.join(app.static_folder, 'uploads')
+    os.makedirs(upload_dir, exist_ok=True)
+
+    new_filename = f"{uuid.uuid4().hex}.{ext}"
+    file.save(os.path.join(upload_dir, new_filename))
+
+    url = url_for('static', filename=f'uploads/{new_filename}')
+    return jsonify({'success': 1, 'message': '上传成功', 'url': url})
 
 
 @app.route('/article/<int:article_id>/edit', methods=['GET', 'POST'])
