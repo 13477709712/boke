@@ -5,6 +5,21 @@
 {% block content %}
     <h1 class="page-title">文章列表</h1>
 
+    <div class="index-header">
+        {% if categories %}
+        <div class="category-filters">
+            <a href="{{ url_for('index') }}" class="category-tag{% if not current_category %} active{% endif %}">全部</a>
+            {% for cat in categories %}
+            <a href="{{ url_for('index', category=cat.id) }}" class="category-tag{% if current_category == cat.id %} active{% endif %}">{{ cat.name }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form class="search-form" action="{{ url_for('search') }}" method="get">
+            <input type="text" name="q" placeholder="搜索文章..." class="search-input">
+        </form>
+    </div>
+
     {% if articles %}
         {% for article in articles %}
             <article class="article-card">
@@ -12,11 +27,39 @@
                 <div class="article-meta">
                     <span>{{ article.author.username }}</span>
                     <span>{{ article.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    {% if article.category %}
+                    <span class="meta-category">{{ article.category.name }}</span>
+                    {% endif %}
+                    <span class="meta-views">{{ article.views }} 次阅读</span>
                 </div>
-                <p class="article-excerpt">{{ article.content[:200] }}{% if article.content|length > 200 %}...{% endif %}</p>
+                <p class="article-excerpt">{{ article.excerpt }}{% if article.excerpt|length >= 200 %}...{% endif %}</p>
                 <a href="{{ url_for('article_detail', article_id=article.id) }}" class="read-more">阅读全文 →</a>
             </article>
         {% endfor %}
+
+        {% if paginator.pages > 1 %}
+        <div class="pagination">
+            {% if paginator.has_prev %}
+            <a href="{{ url_for('index', page=paginator.prev_num, category=current_category) }}" class="page-link prev">← 上一页</a>
+            {% else %}
+            <span class="page-link disabled">← 上一页</span>
+            {% endif %}
+
+            {% for page_num in paginator.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+                {% if page_num %}
+                <a href="{{ url_for('index', page=page_num, category=current_category) }}" class="page-link{% if page_num == paginator.page %} active{% endif %}">{{ page_num }}</a>
+                {% else %}
+                <span class="page-link dots">...</span>
+                {% endif %}
+            {% endfor %}
+
+            {% if paginator.has_next %}
+            <a href="{{ url_for('index', page=paginator.next_num, category=current_category) }}" class="page-link next">下一页 →</a>
+            {% else %}
+            <span class="page-link disabled">下一页 →</span>
+            {% endif %}
+        </div>
+        {% endif %}
     {% else %}
         <p class="empty">还没有文章，{% if current_user.is_authenticated %}<a href="{{ url_for('new_article') }}">写一篇</a>{% else %}<a href="{{ url_for('login') }}">登录后</a>写一篇{% endif %}吧</p>
     {% endif %}

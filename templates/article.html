@@ -18,6 +18,10 @@
                     {% if article.updated_at != article.created_at %}
                         <span class="meta-updated">更新于 {{ article.updated_at.strftime('%Y-%m-%d %H:%M') }}</span>
                     {% endif %}
+                    {% if article.category %}
+                        <span class="meta-category">{{ article.category.name }}</span>
+                    {% endif %}
+                    <span class="meta-views">{{ article.views }} 次阅读</span>
                 </div>
             </div>
 

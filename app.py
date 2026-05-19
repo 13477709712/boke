@@ -1,3 +1,5 @@
+import re
+
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,7 +9,7 @@ from datetime import datetime
 import os
 import uuid
 
-from models import db, User, Article
+from models import db, User, Article, Category
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
@@ -31,8 +33,24 @@ def load_user(user_id):
 
 @app.route('/')
 def index():
-    articles = Article.query.order_by(Article.created_at.desc()).all()
-    return render_template('index.html', articles=articles)
+    page = request.args.get('page', 1, type=int)
+    category_id = request.args.get('category', type=int)
+
+    query = Article.query
+    if category_id:
+        query = query.filter_by(category_id=category_id)
+
+    paginator = query.order_by(Article.created_at.desc()).paginate(page=page, per_page=10, error_out=False)
+    articles = paginator.items
+    categories = Category.query.all()
+
+    md_parser = markdown.Markdown(extensions=['fenced_code', 'tables'])
+    for article in articles:
+        html = md_parser.convert(article.content)
+        text = re.sub(r'<[^>]+>', '', html).replace('&nbsp;', ' ').strip()
+        article.excerpt = text[:200]
+
+    return render_template('index.html', articles=articles, paginator=paginator, categories=categories, current_category=category_id)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -85,29 +103,54 @@ def logout():
     return redirect(url_for('index'))
 
 
+@app.route('/search')
+def search():
+    q = request.args.get('q', '').strip()
+    articles = []
+    if q:
+        articles = Article.query.filter(
+            db.or_(Article.title.contains(q), Article.content.contains(q))
+        ).order_by(Article.created_at.desc()).all()
+    return render_template('search.html', articles=articles, query=q)
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('500.html'), 500
+
+
 @app.route('/new', methods=['GET', 'POST'])
 @login_required
 def new_article():
+    categories = Category.query.all()
     if request.method == 'POST':
         title = request.form.get('title', '').strip()
         content = request.form.get('content', '').strip()
+        category_id = request.form.get('category_id', type=int) or None
 
         if not title or not content:
             flash('标题和内容不能为空', 'error')
-            return render_template('new.html')
+            return render_template('new.html', categories=categories)
 
-        article = Article(title=title, content=content, user_id=current_user.id)
+        article = Article(title=title, content=content, user_id=current_user.id, category_id=category_id)
         db.session.add(article)
         db.session.commit()
         flash('文章发布成功', 'success')
         return redirect(url_for('article_detail', article_id=article.id))
 
-    return render_template('new.html')
+    return render_template('new.html', categories=categories)
 
 
 @app.route('/article/<int:article_id>')
 def article_detail(article_id):
     article = Article.query.get_or_404(article_id)
+    article.views += 1
+    db.session.commit()
     md = markdown.Markdown(extensions=['fenced_code', 'tables', 'codehilite', 'toc'])
     article.html_content = markupsafe.Markup(md.convert(article.content))
     return render_template('article.html', article=article)
@@ -143,22 +186,25 @@ def edit_article(article_id):
         flash('不能编辑别人的文章', 'error')
         return redirect(url_for('index'))
 
+    categories = Category.query.all()
     if request.method == 'POST':
         title = request.form.get('title', '').strip()
         content = request.form.get('content', '').strip()
+        category_id = request.form.get('category_id', type=int) or None
 
         if not title or not content:
             flash('标题和内容不能为空', 'error')
-            return render_template('edit.html', article=article)
+            return render_template('edit.html', article=article, categories=categories)
 
         article.title = title
         article.content = content
+        article.category_id = category_id
         article.updated_at = datetime.utcnow()
         db.session.commit()
         flash('文章已更新', 'success')
         return redirect(url_for('article_detail', article_id=article.id))
 
-    return render_template('edit.html', article=article)
+    return render_template('edit.html', article=article, categories=categories)
 
 
 @app.route('/article/<int:article_id>/delete', methods=['POST'])

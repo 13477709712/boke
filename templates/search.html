@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}搜索 - 我的博客{% endblock %}
+
+{% block content %}
+    <h1 class="page-title">搜索</h1>
+
+    <form class="search-form search-page-form" action="{{ url_for('search') }}" method="get">
+        <input type="text" name="q" value="{{ query }}" placeholder="搜索文章..." class="search-input search-page-input">
+        <button type="submit" class="btn btn-primary search-btn">搜索</button>
+    </form>
+
+    {% if query %}
+        {% if articles %}
+            <p class="search-result-count">共找到 {{ articles|length }} 篇关于"{{ query }}"的文章</p>
+            {% for article in articles %}
+                <article class="article-card">
+                    <h2><a href="{{ url_for('article_detail', article_id=article.id) }}">{{ article.title }}</a></h2>
+                    <div class="article-meta">
+                        <span>{{ article.author.username }}</span>
+                        <span>{{ article.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    </div>
+                    <p class="article-excerpt">{{ article.content[:200] }}{% if article.content|length > 200 %}...{% endif %}</p>
+                    <a href="{{ url_for('article_detail', article_id=article.id) }}" class="read-more">阅读全文 →</a>
+                </article>
+            {% endfor %}
+        {% else %}
+            <p class="empty">没有找到关于"{{ query }}"的文章</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

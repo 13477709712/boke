@@ -16,6 +16,15 @@
             <label for="title">文章标题</label>
             <input type="text" id="title" name="title" required value="{{ article.title }}">
         </div>
+        <div class="form-group">
+            <label for="category">分类</label>
+            <select id="category" name="category_id">
+                <option value="">无分类</option>
+                {% for cat in categories %}
+                <option value="{{ cat.id }}"{% if article.category_id == cat.id %} selected{% endif %}>{{ cat.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
         <div id="vditor"></div>
         <textarea name="content" style="display:none">{{ article.content }}</textarea>
         <button type="submit" class="btn btn-primary submit-btn">保存修改</button>
