@@ -80,6 +80,19 @@ body {
     gap: 4px;
 }
 
+.nav-github {
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    margin-left: 4px;
+    vertical-align: middle;
+    transition: color 0.2s;
+}
+
+.nav-github:hover {
+    color: var(--primary);
+}
+
 .nav-links a {
     color: var(--text-secondary);
     text-decoration: none;
