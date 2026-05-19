@@ -35,6 +35,15 @@ with app.app_context():
         db.session.execute(text(
             'ALTER TABLE article ADD COLUMN views INTEGER DEFAULT 0')
         )
+    if 'cover_image' not in cols:
+        db.session.execute(text(
+            'ALTER TABLE article ADD COLUMN cover_image VARCHAR(300)')
+        )
+    cols_user = [c['name'] for c in insp.get_columns('user')]
+    if 'bio' not in cols_user:
+        db.session.execute(text('ALTER TABLE user ADD COLUMN bio TEXT'))
+    if 'avatar_url' not in cols_user:
+        db.session.execute(text('ALTER TABLE user ADD COLUMN avatar_url VARCHAR(300)'))
     db.session.commit()
 
     from models import Category
@@ -135,6 +144,23 @@ def search():
     return render_template('search.html', articles=articles, query=q)
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/user/<username>')
+def user_profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    articles = Article.query.filter_by(user_id=user.id).order_by(Article.created_at.desc()).all()
+    md_parser = markdown.Markdown(extensions=['fenced_code', 'tables'])
+    for article in articles:
+        html = md_parser.convert(article.content)
+        text = re.sub(r'<[^>]+>', '', html).replace('&nbsp;', ' ').strip()
+        article.excerpt = text[:200]
+    return render_template('profile.html', user=user, articles=articles)
+
+
 @app.errorhandler(404)
 def not_found(e):
     return render_template('404.html'), 404
@@ -158,7 +184,8 @@ def new_article():
             flash('标题和内容不能为空', 'error')
             return render_template('new.html', categories=categories)
 
-        article = Article(title=title, content=content, user_id=current_user.id, category_id=category_id)
+        cover_image = request.form.get('cover_image', '').strip() or None
+        article = Article(title=title, content=content, user_id=current_user.id, category_id=category_id, cover_image=cover_image)
         db.session.add(article)
         db.session.commit()
         flash('文章发布成功', 'success')
@@ -174,6 +201,9 @@ def article_detail(article_id):
     db.session.commit()
     md = markdown.Markdown(extensions=['fenced_code', 'tables', 'codehilite', 'toc'])
     article.html_content = markupsafe.Markup(md.convert(article.content))
+    md_summary = markdown.Markdown(extensions=['fenced_code', 'tables'])
+    summary_text = re.sub(r'<[^>]+>', '', md_summary.convert(article.content)).replace('&nbsp;', ' ').strip()[:200]
+    article.summary = summary_text
     return render_template('article.html', article=article)
 
 
@@ -220,6 +250,7 @@ def edit_article(article_id):
         article.title = title
         article.content = content
         article.category_id = category_id
+        article.cover_image = request.form.get('cover_image', '').strip() or None
         article.updated_at = datetime.utcnow() + timedelta(hours=8)
         db.session.commit()
         flash('文章已更新', 'success')

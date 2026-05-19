@@ -37,3 +37,4 @@ class Article(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
     category = db.relationship('Category', backref='articles')
     views = db.Column(db.Integer, default=0)
+    cover_image = db.Column(db.String(300), nullable=True)

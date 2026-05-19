@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user.username }} - 我的博客{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="profile-card">
+        <div class="profile-avatar">
+            {% if user.avatar_url %}
+            <img src="{{ user.avatar_url }}" alt="{{ user.username }}">
+            {% else %}
+            <div class="profile-avatar-placeholder">{{ user.username[0] | upper }}</div>
+            {% endif %}
+        </div>
+        <h1 class="profile-name">{{ user.username }}</h1>
+        {% if user.bio %}
+        <p class="profile-bio">{{ user.bio }}</p>
+        {% endif %}
+        <p class="profile-meta">{{ articles|length }} 篇文章</p>
+    </div>
+
+    <h2 class="page-title">{{ user.username }} 的文章</h2>
+
+    {% if articles %}
+        {% for article in articles %}
+            <article class="article-card">
+                {% if article.cover_image %}
+                <a href="{{ url_for('article_detail', article_id=article.id) }}" class="article-cover-link">
+                    <img src="{{ article.cover_image }}" class="article-cover" alt="{{ article.title }}" loading="lazy">
+                </a>
+                {% endif %}
+                <h2><a href="{{ url_for('article_detail', article_id=article.id) }}">{{ article.title }}</a></h2>
+                <div class="article-meta">
+                    <span>{{ article.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                    {% if article.category %}
+                    <span class="meta-category">{{ article.category.name }}</span>
+                    {% endif %}
+                    <span class="meta-views">{{ article.views }} 次阅读</span>
+                </div>
+                <p class="article-excerpt">{{ article.excerpt }}{% if article.excerpt|length >= 200 %}...{% endif %}</p>
+                <a href="{{ url_for('article_detail', article_id=article.id) }}" class="read-more">阅读全文 →</a>
+            </article>
+        {% endfor %}
+    {% else %}
+        <p class="empty">还没有文章</p>
+    {% endif %}
+</div>
+{% endblock %}

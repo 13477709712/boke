@@ -4,12 +4,26 @@
 
 {% block title %}{{ article.title }} - 我的博客{% endblock %}
 
+{% block description %}{{ article.summary }}{% endblock %}
+
+{% block og %}
+<meta property="og:title" content="{{ article.title }}">
+<meta property="og:description" content="{{ article.summary }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ url_for('article_detail', article_id=article.id, _external=True) }}">
+{% endblock %}
+
 {% block content %}
 <div class="reading-progress" id="readingProgress"></div>
 
 <div class="article-layout">
     <div class="article-main">
         <article class="article-detail">
+            {% if article.cover_image %}
+            <div class="article-cover-wrapper">
+                <img src="{{ article.cover_image }}" class="article-detail-cover" alt="{{ article.title }}" loading="lazy">
+            </div>
+            {% endif %}
             <div class="article-header">
                 <h1>{{ article.title }}</h1>
                 <div class="article-meta">
@@ -27,6 +41,13 @@
 
             <div class="article-content">
                 {{ article.html_content }}
+            </div>
+
+            <div class="share-section">
+                <span class="share-label">分享到：</span>
+                <a href="https://service.weibo.com/share/share.php?url={{ url_for('article_detail', article_id=article.id, _external=True)|urlencode }}&title={{ article.title|urlencode }}" target="_blank" class="share-btn share-weibo" title="分享到微博">微博</a>
+                <a href="https://connect.qq.com/widget/shareqq/index.html?url={{ url_for('article_detail', article_id=article.id, _external=True)|urlencode }}&title={{ article.title|urlencode }}" target="_blank" class="share-btn share-qq" title="分享到 QQ">QQ</a>
+                <a href="https://twitter.com/intent/tweet?url={{ url_for('article_detail', article_id=article.id, _external=True)|urlencode }}&text={{ article.title|urlencode }}" target="_blank" class="share-btn share-twitter" title="分享到 Twitter">Twitter</a>
             </div>
 
             {% if current_user.is_authenticated and current_user.id == article.user_id %}
@@ -84,6 +105,11 @@
             document.getElementById('tocContainer').style.display = 'none';
         }
     }
+
+    // Image lazy loading
+    document.querySelectorAll('.article-content img').forEach(function(img) {
+        img.loading = 'lazy';
+    });
 
     // Scroll spy - highlight current heading in TOC
     var tocLinks = tocList ? tocList.querySelectorAll('a') : [];

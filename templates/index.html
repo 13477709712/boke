@@ -23,6 +23,11 @@
     {% if articles %}
         {% for article in articles %}
             <article class="article-card">
+                {% if article.cover_image %}
+                <a href="{{ url_for('article_detail', article_id=article.id) }}" class="article-cover-link">
+                    <img src="{{ article.cover_image }}" class="article-cover" alt="{{ article.title }}" loading="lazy">
+                </a>
+                {% endif %}
                 <h2><a href="{{ url_for('article_detail', article_id=article.id) }}">{{ article.title }}</a></h2>
                 <div class="article-meta">
                     <span>{{ article.author.username }}</span>
