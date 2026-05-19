@@ -21,19 +21,19 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
-    from sqlalchemy import inspect
+    from sqlalchemy import inspect, text
     insp = inspect(db.engine)
     if 'category' not in insp.get_table_names():
         db.create_all()
     cols = [c['name'] for c in insp.get_columns('article')]
     if 'category_id' not in cols:
-        db.session.execute(
+        db.session.execute(text(
             'ALTER TABLE article ADD COLUMN category_id INTEGER '
-            'REFERENCES category(id)'
+            'REFERENCES category(id)')
         )
     if 'views' not in cols:
-        db.session.execute(
-            'ALTER TABLE article ADD COLUMN views INTEGER DEFAULT 0'
+        db.session.execute(text(
+            'ALTER TABLE article ADD COLUMN views INTEGER DEFAULT 0')
         )
     db.session.commit()
 
